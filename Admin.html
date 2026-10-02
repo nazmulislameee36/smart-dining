@@ -1,0 +1,3111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Dining Admin</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f1f5f9;
+    color:#172033;
+}
+
+button{
+    border:0;
+    border-radius:8px;
+    padding:9px 13px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+input,select,textarea{
+    width:100%;
+    padding:10px;
+    border:1px solid #cbd5e1;
+    border-radius:8px;
+    margin:5px 0;
+}
+
+.login-page{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+    background:linear-gradient(135deg,#0f766e,#2563eb);
+}
+
+.login-box{
+    width:100%;
+    max-width:380px;
+    background:white;
+    padding:30px;
+    border-radius:18px;
+}
+
+.login-box h1{
+    text-align:center;
+    color:#0f766e;
+}
+
+.login-box p{
+    text-align:center;
+    color:#64748b;
+}
+
+.login-box button{
+    width:100%;
+    background:#0f766e;
+    color:white;
+    margin-top:8px;
+}
+
+#loginMessage{
+    color:#dc2626;
+    text-align:center;
+    margin-top:10px;
+}
+
+#adminApp{
+    display:none;
+}
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:245px;
+    height:100vh;
+    background:#0f172a;
+    color:white;
+    padding:15px;
+    overflow:auto;
+}
+
+.logo{
+    text-align:center;
+    padding:10px;
+    border-bottom:1px solid #334155;
+    margin-bottom:10px;
+}
+
+.logo h2{
+    color:#2dd4bf;
+    margin:5px;
+}
+
+.menu{
+    width:100%;
+    background:transparent;
+    color:#cbd5e1;
+    text-align:left;
+    margin:2px 0;
+}
+
+.menu:hover,
+.menu.active{
+    background:#1e293b;
+    color:#2dd4bf;
+}
+
+.logout{
+    width:100%;
+    background:#dc2626;
+    color:white;
+    margin-top:15px;
+}
+
+.main{
+    margin-left:245px;
+    padding:20px;
+}
+
+.topbar{
+    background:white;
+    padding:18px;
+    border-radius:14px;
+    margin-bottom:18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.hall-name{
+    color:#0f766e;
+    font-weight:bold;
+}
+
+.section{
+    display:none;
+}
+
+.section.active{
+    display:block;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+    gap:14px;
+    margin-bottom:18px;
+}
+
+.card{
+    background:white;
+    padding:18px;
+    border-radius:14px;
+    box-shadow:0 2px 10px rgba(0,0,0,.05);
+}
+
+.card h3{
+    font-size:14px;
+    color:#64748b;
+    margin:0 0 8px;
+}
+
+.number{
+    font-size:28px;
+    font-weight:bold;
+    color:#0f766e;
+}
+
+.box{
+    background:white;
+    padding:18px;
+    border-radius:14px;
+    margin-bottom:18px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+    gap:10px;
+}
+
+.row{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    flex-wrap:wrap;
+}
+
+.row > *{
+    flex:1;
+    min-width:150px;
+}
+
+.table{
+    overflow:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:650px;
+}
+
+th,td{
+    padding:10px;
+    border-bottom:1px solid #e2e8f0;
+    text-align:left;
+}
+
+th{
+    background:#f8fafc;
+}
+
+.green{
+    background:#16a34a;
+    color:white;
+}
+
+.red{
+    background:#dc2626;
+    color:white;
+}
+
+.blue{
+    background:#2563eb;
+    color:white;
+}
+
+.orange{
+    background:#f59e0b;
+    color:white;
+}
+
+.gray{
+    background:#64748b;
+    color:white;
+}
+
+.small{
+    padding:6px 9px;
+    font-size:12px;
+    margin:2px;
+}
+
+.summary{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+    gap:10px;
+    margin:15px 0;
+}
+
+.summary-item{
+    background:#f8fafc;
+    padding:14px;
+    border-radius:10px;
+    text-align:center;
+}
+
+.summary-item strong{
+    display:block;
+    font-size:23px;
+    color:#0f766e;
+    margin-top:5px;
+}
+
+.on{
+    color:#166534;
+    font-weight:bold;
+}
+
+.off{
+    color:#991b1b;
+    font-weight:bold;
+}
+
+.message{
+    padding:10px;
+    margin-top:8px;
+    border-radius:8px;
+    background:#f1f5f9;
+}
+
+@media(max-width:800px){
+
+    .sidebar{
+        position:relative;
+        width:100%;
+        height:auto;
+    }
+
+    .main{
+        margin-left:0;
+        padding:12px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+
+<div id="loginPage" class="login-page">
+
+    <div class="login-box">
+
+        <h1>Smart Dining</h1>
+
+        <p>Admin Management System</p>
+
+        <input
+            id="adminUsername"
+            type="text"
+            placeholder="Admin Username"
+        >
+
+        <input
+            id="adminPassword"
+            type="password"
+            placeholder="Password"
+        >
+
+        <button onclick="adminLogin()">
+            Login
+        </button>
+
+        <div id="loginMessage"></div>
+
+    </div>
+
+</div>
+
+
+<!-- ADMIN APP -->
+
+<div id="adminApp">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <h2>Smart Dining</h2>
+
+            <div>Admin Panel</div>
+
+        </div>
+
+
+        <button
+            class="menu active"
+            onclick="openSection('dashboard',this)"
+        >
+            Dashboard
+        </button>
+
+
+        <button
+            class="menu"
+            onclick="openSection('requests',this)"
+        >
+            Registration Requests
+        </button>
+
+
+        <button
+            class="menu"
+            onclick="openSection('students',this)"
+        >
+            Student Management
+        </button>
+
+
+        <button
+            class="menu"
+            onclick="openSection('meals',this)"
+        >
+            Meal & Dining Off
+        </button>
+
+
+        <button
+            class="menu"
+            onclick="openSection('payments',this)"
+        >
+            Payments
+        </button>
+
+
+        <button
+            class="menu"
+            onclick="openSection('credit',this)"
+        >
+            Add Credit
+        </button>
+
+
+        <button
+            class="menu"
+            onclick="openSection('rfid',this)"
+        >
+            RFID & Meal Time
+        </button>
+
+
+        <button
+            class="menu"
+            onclick="openSection('notice',this)"
+        >
+            Notice Board
+        </button>
+
+
+        <button
+            class="menu"
+            onclick="openSection('reports',this)"
+        >
+            Reports
+        </button>
+
+
+        <button
+            class="menu"
+            onclick="openSection('password',this)"
+        >
+            Password Reset
+        </button>
+
+
+        <button
+            class="logout"
+            onclick="adminLogout()"
+        >
+            Logout
+        </button>
+
+    </aside>
+
+
+    <main class="main">
+
+
+        <div class="topbar">
+
+            <h2>Admin Dashboard</h2>
+
+            <div class="hall-name">
+                Shahid Tajuddin Ahmad Hall (STA Hall)
+            </div>
+
+        </div>
+
+
+        <!-- DASHBOARD -->
+
+        <section
+            id="dashboard"
+            class="section active"
+        >
+
+            <div class="cards">
+
+                <div class="card">
+                    <h3>Total Students</h3>
+                    <div
+                        id="totalStudents"
+                        class="number"
+                    >
+                        0
+                    </div>
+                </div>
+
+
+                <div class="card">
+                    <h3>Active Students</h3>
+                    <div
+                        id="activeStudents"
+                        class="number"
+                    >
+                        0
+                    </div>
+                </div>
+
+
+                <div class="card">
+                    <h3>RFID Students</h3>
+                    <div
+                        id="rfidStudents"
+                        class="number"
+                    >
+                        0
+                    </div>
+                </div>
+
+
+                <div class="card">
+                    <h3>Pending Requests</h3>
+                    <div
+                        id="pendingRequests"
+                        class="number"
+                    >
+                        0
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="box">
+
+                <h2>Daily Meal Summary</h2>
+
+                <div class="row">
+
+                    <input
+                        id="dashboardDate"
+                        type="date"
+                    >
+
+                    <button
+                        class="blue"
+                        onclick="showDailyMeals('dashboardDate','dashboardMealTable')"
+                    >
+                        View
+                    </button>
+
+                </div>
+
+
+                <div class="summary">
+
+                    <div class="summary-item">
+                        Breakfast
+                        <strong id="dashboardBreakfast">
+                            0
+                        </strong>
+                    </div>
+
+
+                    <div class="summary-item">
+                        Lunch
+                        <strong id="dashboardLunch">
+                            0
+                        </strong>
+                    </div>
+
+
+                    <div class="summary-item">
+                        Dinner
+                        <strong id="dashboardDinner">
+                            0
+                        </strong>
+                    </div>
+
+
+                    <div class="summary-item">
+                        Total Meal
+                        <strong id="dashboardTotal">
+                            0
+                        </strong>
+                    </div>
+
+
+                    <div class="summary-item">
+                        Total Amount
+                        <strong id="dashboardAmount">
+                            ৳0
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                <div id="dashboardMealTable"></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- REGISTRATION REQUEST -->
+
+        <section
+            id="requests"
+            class="section"
+        >
+
+            <div class="box">
+
+                <h2>Registration Requests</h2>
+
+                <div id="registrationList">
+                    Loading...
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- STUDENTS -->
+
+        <section
+            id="students"
+            class="section"
+        >
+
+            <div class="box">
+
+                <h2>Add Student Manually</h2>
+
+                <div class="grid">
+
+                    <input
+                        id="newStudentId"
+                        placeholder="Student ID"
+                    >
+
+                    <input
+                        id="newStudentName"
+                        placeholder="Student Name"
+                    >
+
+                    <input
+                        id="newMicrosoft"
+                        placeholder="Microsoft Account"
+                    >
+
+                    <input
+                        id="newPhone"
+                        placeholder="Phone"
+                    >
+
+                    <input
+                        id="newPassword"
+                        placeholder="Password"
+                    >
+
+                </div>
+
+
+                <button
+                    class="green"
+                    onclick="addStudent()"
+                >
+                    Add Student
+                </button>
+
+
+                <div
+                    id="studentMessage"
+                    class="message"
+                ></div>
+
+            </div>
+
+
+            <div class="box">
+
+                <h2>Student Management</h2>
+
+                <div id="studentList">
+                    Loading...
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- MEALS -->
+
+        <section
+            id="meals"
+            class="section"
+        >
+
+            <div class="box">
+
+                <h2>Dining Off</h2>
+
+                <div class="row">
+
+                    <input
+                        id="closedDate"
+                        type="date"
+                    >
+
+                    <button
+                        class="red"
+                        onclick="closeDining()"
+                    >
+                        Close Dining
+                    </button>
+
+                </div>
+
+
+                <div id="closedDates"></div>
+
+            </div>
+
+
+            <div class="box">
+
+                <h2>Date-wise Meal</h2>
+
+                <div class="row">
+
+                    <input
+                        id="mealViewDate"
+                        type="date"
+                    >
+
+                    <button
+                        class="blue"
+                        onclick="showDailyMeals('mealViewDate','mealTable')"
+                    >
+                        View Meal
+                    </button>
+
+                </div>
+
+
+                <div id="mealTable"></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- PAYMENTS -->
+
+        <section
+            id="payments"
+            class="section"
+        >
+
+            <div class="box">
+
+                <h2>Payment Records</h2>
+
+                <div id="paymentList">
+                    Loading...
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- CREDIT -->
+
+        <section
+            id="credit"
+            class="section"
+        >
+
+            <div class="box">
+
+                <h2>Add Student Credit</h2>
+
+                <input
+                    id="creditStudentId"
+                    placeholder="Student ID"
+                >
+
+                <input
+                    id="creditValue"
+                    type="number"
+                    placeholder="Credit Amount"
+                >
+
+                <button
+                    class="green"
+                    onclick="addStudentCredit()"
+                >
+                    Add Credit
+                </button>
+
+
+                <div
+                    id="creditMessage"
+                    class="message"
+                ></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- RFID -->
+
+        <section
+            id="rfid"
+            class="section"
+        >
+
+            <div class="box">
+
+                <h2>RFID Registration</h2>
+
+                <input
+                    id="rfidStudentId"
+                    placeholder="Student ID"
+                >
+
+                <input
+                    id="rfidUID"
+                    placeholder="RFID UID"
+                >
+
+                <div class="row">
+
+                    <button
+                        class="blue"
+                        onclick="generateRFID()"
+                    >
+                        Generate UID
+                    </button>
+
+                    <button
+                        class="green"
+                        onclick="registerRFID()"
+                    >
+                        Register RFID
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="rfidMessage"
+                    class="message"
+                ></div>
+
+            </div>
+
+
+            <div class="box">
+
+                <h2>Meal Time</h2>
+
+                <div class="grid">
+
+                    <input
+                        id="breakfastTime"
+                        placeholder="Breakfast Time"
+                    >
+
+                    <input
+                        id="lunchTime"
+                        placeholder="Lunch Time"
+                    >
+
+                    <input
+                        id="dinnerTime"
+                        placeholder="Dinner Time"
+                    >
+
+                </div>
+
+
+                <button
+                    class="green"
+                    onclick="saveMealTimes()"
+                >
+                    Save Meal Time
+                </button>
+
+
+                <div
+                    id="mealTimeMessage"
+                    class="message"
+                ></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- NOTICE -->
+
+        <section
+            id="notice"
+            class="section"
+        >
+
+            <div class="box">
+
+                <h2>Notice Board</h2>
+
+                <textarea
+                    id="noticeText"
+                    rows="5"
+                    placeholder="Write notice"
+                ></textarea>
+
+
+                <button
+                    class="blue"
+                    onclick="saveNotice()"
+                >
+                    Publish Notice
+                </button>
+
+
+                <div
+                    id="noticeMessage"
+                    class="message"
+                ></div>
+
+
+                <h3>Current Notice</h3>
+
+                <div
+                    id="currentNotice"
+                    class="message"
+                >
+                    No notice.
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- REPORT -->
+
+        <section
+            id="reports"
+            class="section"
+        >
+
+            <div class="box">
+
+                <h2>Date-wise Meal Report</h2>
+
+                <div class="row">
+
+                    <input
+                        id="reportDate"
+                        type="date"
+                    >
+
+                    <button
+                        class="blue"
+                        onclick="generateReport()"
+                    >
+                        Generate Report
+                    </button>
+
+                    <button
+                        class="green"
+                        onclick="downloadPDF()"
+                    >
+                        Download PDF
+                    </button>
+
+                </div>
+
+
+                <div id="reportResult"></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- PASSWORD -->
+
+        <section
+            id="password"
+            class="section"
+        >
+
+            <div class="box">
+
+                <h2>Reset Student Password</h2>
+
+                <input
+                    id="resetStudentId"
+                    placeholder="Student ID"
+                >
+
+                <input
+                    id="resetStudentPassword"
+                    type="password"
+                    placeholder="New Password"
+                >
+
+                <button
+                    class="orange"
+                    onclick="resetStudentPassword()"
+                >
+                    Reset Password
+                </button>
+
+
+                <div
+                    id="passwordMessage"
+                    class="message"
+                ></div>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+
+<script type="module">
+
+import {
+    initializeApp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+    getFirestore,
+    collection,
+    doc,
+    getDoc,
+    getDocs,
+    setDoc,
+    updateDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyAKGxQolFB-Dif0m8QaTkJVYJRAGcdb1I",
+
+    authDomain:
+        "smart-dining-c32a7.firebaseapp.com",
+
+    projectId:
+        "smart-dining-c32a7",
+
+    storageBucket:
+        "smart-dining-c32a7.firebasestorage.app",
+
+    messagingSenderId:
+        "115543760348",
+
+    appId:
+        "1:115543760348:web:83e156f3a7c58022704319"
+
+};
+
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+const HALL = "Shahid Tajuddin Ahmad Hall";
+
+
+const RATE = {
+
+    Breakfast:25,
+
+    Lunch:35,
+
+    Dinner:35
+
+};
+
+
+let currentReport = null;
+
+
+
+function getToday(){
+
+    const d = new Date();
+
+    const y = d.getFullYear();
+
+    const m = String(
+        d.getMonth()+1
+    ).padStart(2,"0");
+
+    const day = String(
+        d.getDate()
+    ).padStart(2,"0");
+
+    return y+"-"+m+"-"+day;
+
+}
+
+
+function getMonth(date){
+
+    return date.substring(0,7);
+
+}
+
+
+function isMealON(value){
+
+    return (
+        value === "Paid" ||
+        value === "ON" ||
+        value === true
+    );
+
+}
+
+
+async function getStudents(){
+
+    const snapshot = await getDocs(
+        collection(
+            db,
+            "halls",
+            HALL,
+            "students"
+        )
+    );
+
+    return snapshot.docs.map(
+        item => ({
+            id:item.id,
+            data:item.data()
+        })
+    );
+
+}
+
+
+async function getMonthlyMeals(
+    studentId,
+    month
+){
+
+    const reference = doc(
+        db,
+        "halls",
+        HALL,
+        "students",
+        studentId,
+        "monthlyMeals",
+        month
+    );
+
+    const snapshot =
+        await getDoc(reference);
+
+    if(!snapshot.exists()){
+        return {};
+    }
+
+    return snapshot.data().meals || {};
+
+}
+
+
+window.adminLogin = function(){
+
+    const username =
+        document.getElementById(
+            "adminUsername"
+        ).value.trim();
+
+    const password =
+        document.getElementById(
+            "adminPassword"
+        ).value;
+
+    if(
+        username === "admin" &&
+        password === "admin123"
+    ){
+
+        document.getElementById(
+            "loginPage"
+        ).style.display = "none";
+
+        document.getElementById(
+            "adminApp"
+        ).style.display = "block";
+
+        initializeAdmin();
+
+    }else{
+
+        document.getElementById(
+            "loginMessage"
+        ).textContent =
+            "Invalid username or password.";
+
+    }
+
+};
+
+
+window.adminLogout = function(){
+
+    document.getElementById(
+        "adminApp"
+    ).style.display = "none";
+
+    document.getElementById(
+        "loginPage"
+    ).style.display = "flex";
+
+};
+
+
+window.openSection = function(
+    sectionId,
+    button
+){
+
+    document
+        .querySelectorAll(".section")
+        .forEach(
+            section =>
+                section.classList.remove(
+                    "active"
+                )
+        );
+
+
+    document
+        .querySelectorAll(".menu")
+        .forEach(
+            menu =>
+                menu.classList.remove(
+                    "active"
+                )
+        );
+
+
+    document
+        .getElementById(sectionId)
+        .classList.add("active");
+
+
+    if(button){
+        button.classList.add("active");
+    }
+
+};
+
+
+async function initializeAdmin(){
+
+    const today = getToday();
+
+    document.getElementById(
+        "dashboardDate"
+    ).value = today;
+
+    document.getElementById(
+        "closedDate"
+    ).value = today;
+
+    document.getElementById(
+        "mealViewDate"
+    ).value = today;
+
+    document.getElementById(
+        "reportDate"
+    ).value = today;
+
+
+    await loadDashboard();
+
+    await showDailyMeals(
+        "dashboardDate",
+        "dashboardMealTable"
+    );
+
+    await loadRegistrationRequests();
+
+    await loadStudentList();
+
+    await loadClosedDates();
+
+    await loadPayments();
+
+    await loadMealTimes();
+
+    await loadNotice();
+
+}
+
+
+async function loadDashboard(){
+
+    try{
+
+        const list =
+            await getStudents();
+
+
+        let active = 0;
+
+        let rfid = 0;
+
+
+        list.forEach(student => {
+
+            const data =
+                student.data;
+
+
+            if(
+                data.isActive !== false &&
+                data.isBlocked !== true
+            ){
+                active++;
+            }
+
+
+            if(data.rfidUID){
+                rfid++;
+            }
+
+        });
+
+
+        let pending = 0;
+
+
+        const requests =
+            await getDocs(
+                collection(
+                    db,
+                    "halls",
+                    HALL,
+                    "registrationRequests"
+                )
+            );
+
+
+        requests.forEach(item => {
+
+            if(
+                item.data().status ===
+                "Pending"
+            ){
+                pending++;
+            }
+
+        });
+
+
+        document.getElementById(
+            "totalStudents"
+        ).textContent = list.length;
+
+
+        document.getElementById(
+            "activeStudents"
+        ).textContent = active;
+
+
+        document.getElementById(
+            "rfidStudents"
+        ).textContent = rfid;
+
+
+        document.getElementById(
+            "pendingRequests"
+        ).textContent = pending;
+
+
+    }catch(error){
+
+        console.error(error);
+
+    }
+
+}
+
+
+async function getDaySummary(date){
+
+    const students =
+        await getStudents();
+
+
+    let breakfast = 0;
+
+    let lunch = 0;
+
+    let dinner = 0;
+
+    const rows = [];
+
+
+    for(
+        const student of students
+    ){
+
+        const meals =
+            await getMonthlyMeals(
+                student.id,
+                getMonth(date)
+            );
+
+
+        const b =
+            isMealON(
+                meals[
+                    date+"_Breakfast"
+                ]
+            );
+
+
+        const l =
+            isMealON(
+                meals[
+                    date+"_Lunch"
+                ]
+            );
+
+
+        const d =
+            isMealON(
+                meals[
+                    date+"_Dinner"
+                ]
+            );
+
+
+        if(b){
+            breakfast++;
+        }
+
+        if(l){
+            lunch++;
+        }
+
+        if(d){
+            dinner++;
+        }
+
+
+        if(b || l || d){
+
+            rows.push({
+
+                id:
+                    student.data.studentId ||
+                    student.id,
+
+                name:
+                    student.data.name ||
+                    "",
+
+                breakfast:b,
+
+                lunch:l,
+
+                dinner:d
+
+            });
+
+        }
+
+    }
+
+
+    const total =
+        breakfast +
+        lunch +
+        dinner;
+
+
+    const amount =
+        breakfast * RATE.Breakfast +
+        lunch * RATE.Lunch +
+        dinner * RATE.Dinner;
+
+
+    return {
+        breakfast,
+        lunch,
+        dinner,
+        total,
+        amount,
+        rows
+    };
+
+}
+
+
+window.showDailyMeals = async function(
+    inputId,
+    outputId
+){
+
+    const date =
+        document.getElementById(
+            inputId
+        ).value;
+
+
+    if(!date){
+        return;
+    }
+
+
+    try{
+
+        const result =
+            await getDaySummary(date);
+
+
+        if(
+            inputId === "dashboardDate"
+        ){
+
+            document.getElementById(
+                "dashboardBreakfast"
+            ).textContent =
+                result.breakfast;
+
+
+            document.getElementById(
+                "dashboardLunch"
+            ).textContent =
+                result.lunch;
+
+
+            document.getElementById(
+                "dashboardDinner"
+            ).textContent =
+                result.dinner;
+
+
+            document.getElementById(
+                "dashboardTotal"
+            ).textContent =
+                result.total;
+
+
+            document.getElementById(
+                "dashboardAmount"
+            ).textContent =
+                "৳"+result.amount;
+
+        }
+
+
+        let html = "";
+
+
+        if(result.rows.length === 0){
+
+            html =
+                "<div class='message'>No paid meal found for this date.</div>";
+
+        }else{
+
+            html +=
+                "<div class='table'>";
+
+            html +=
+                "<table>";
+
+            html +=
+                "<tr>";
+
+            html +=
+                "<th>Student ID</th>";
+
+            html +=
+                "<th>Name</th>";
+
+            html +=
+                "<th>Breakfast</th>";
+
+            html +=
+                "<th>Lunch</th>";
+
+            html +=
+                "<th>Dinner</th>";
+
+            html +=
+                "</tr>";
+
+
+            result.rows.forEach(
+                row => {
+
+                    html +=
+                        "<tr>";
+
+                    html +=
+                        "<td>"+
+                        escapeHTML(row.id)+
+                        "</td>";
+
+                    html +=
+                        "<td>"+
+                        escapeHTML(row.name)+
+                        "</td>";
+
+                    html +=
+                        "<td class='"+(
+                            row.breakfast
+                            ?"on"
+                            :"off"
+                        )+"'>"+
+                        (
+                            row.breakfast
+                            ?"ON"
+                            :"OFF"
+                        )+
+                        "</td>";
+
+                    html +=
+                        "<td class='"+(
+                            row.lunch
+                            ?"on"
+                            :"off"
+                        )+"'>"+
+                        (
+                            row.lunch
+                            ?"ON"
+                            :"OFF"
+                        )+
+                        "</td>";
+
+                    html +=
+                        "<td class='"+(
+                            row.dinner
+                            ?"on"
+                            :"off"
+                        )+"'>"+
+                        (
+                            row.dinner
+                            ?"ON"
+                            :"OFF"
+                        )+
+                        "</td>";
+
+                    html +=
+                        "</tr>";
+
+                }
+            );
+
+
+            html +=
+                "</table>";
+
+            html +=
+                "</div>";
+
+        }
+
+
+        document.getElementById(
+            outputId
+        ).innerHTML = html;
+
+
+    }catch(error){
+
+        document.getElementById(
+            outputId
+        ).innerHTML =
+            "<div class='message'>"+
+            escapeHTML(error.message)+
+            "</div>";
+
+    }
+
+};
+
+
+function escapeHTML(value){
+
+    return String(
+        value ?? ""
+    ).replace(
+        /[&<>"']/g,
+        function(character){
+
+            return {
+
+                "&":"&amp;",
+
+                "<":"&lt;",
+
+                ">":"&gt;",
+
+                '"':"&quot;",
+
+                "'":"&#39;"
+
+            }[character];
+
+        }
+    );
+
+}
+
+
+async function loadRegistrationRequests(){
+
+    const box =
+        document.getElementById(
+            "registrationList"
+        );
+
+
+    try{
+
+        const snapshot =
+            await getDocs(
+                collection(
+                    db,
+                    "halls",
+                    HALL,
+                    "registrationRequests"
+                )
+            );
+
+
+        let html =
+            "<div class='table'><table>";
+
+        html +=
+            "<tr>";
+
+        html +=
+            "<th>Student ID</th>";
+
+        html +=
+            "<th>Name</th>";
+
+        html +=
+            "<th>Microsoft Account</th>";
+
+        html +=
+            "<th>Phone</th>";
+
+        html +=
+            "<th>Status</th>";
+
+        html +=
+            "<th>Action</th>";
+
+        html +=
+            "</tr>";
+
+
+        let found = false;
+
+
+        snapshot.forEach(
+            item => {
+
+                const data =
+                    item.data();
+
+
+                if(
+                    data.status ===
+                    "Pending"
+                ){
+
+                    found = true;
+
+
+                    html +=
+                        "<tr>";
+
+                    html +=
+                        "<td>"+
+                        escapeHTML(item.id)+
+                        "</td>";
+
+                    html +=
+                        "<td>"+
+                        escapeHTML(data.name)+
+                        "</td>";
+
+                    html +=
+                        "<td>"+
+                        escapeHTML(
+                            data.microsoftAccount
+                        )+
+                        "</td>";
+
+                    html +=
+                        "<td>"+
+                        escapeHTML(data.phone)+
+                        "</td>";
+
+                    html +=
+                        "<td>Pending</td>";
+
+                    html +=
+                        "<td>";
+
+                    html +=
+                        "<button class='small green' onclick=\"approveRegistration('"+
+                        item.id+
+                        "')\">Approve</button>";
+
+                    html +=
+                        "<button class='small red' onclick=\"rejectRegistration('"+
+                        item.id+
+                        "')\">Reject</button>";
+
+                    html +=
+                        "</td>";
+
+                    html +=
+                        "</tr>";
+
+                }
+
+            }
+        );
+
+
+        html +=
+            "</table></div>";
+
+
+        box.innerHTML =
+            found
+            ?html
+            :"<div class='message'>No pending registration request.</div>";
+
+
+    }catch(error){
+
+        box.innerHTML =
+            "<div class='message'>"+
+            escapeHTML(error.message)+
+            "</div>";
+
+    }
+
+}
+
+
+window.approveRegistration =
+async function(studentId){
+
+    const requestRef =
+        doc(
+            db,
+            "halls",
+            HALL,
+            "registrationRequests",
+            studentId
+        );
+
+
+    const snapshot =
+        await getDoc(requestRef);
+
+
+    if(!snapshot.exists()){
+
+        alert(
+            "Registration request not found."
+        );
+
+        return;
+
+    }
+
+
+    const data =
+        snapshot.data();
+
+
+    const studentRef =
+        doc(
+            db,
+            "halls",
+            HALL,
+            "students",
+            studentId
+        );
+
+
+    await setDoc(
+        studentRef,
+        {
+
+            studentId:studentId,
+
+            name:data.name || "",
+
+            microsoftAccount:
+                data.microsoftAccount || "",
+
+            phone:data.phone || "",
+
+            password:data.password || "",
+
+            isApproved:true,
+
+            isActive:true,
+
+            isBlocked:false,
+
+            rfidUID:"",
+
+            cardStatus:
+                "Not Registered",
+
+            creditBalance:0,
+
+            registrationStatus:
+                "Approved"
+
+        },
+        {merge:true}
+    );
+
+
+    await updateDoc(
+        requestRef,
+        {
+            status:"Approved"
+        }
+    );
+
+
+    await loadDashboard();
+
+    await loadRegistrationRequests();
+
+    await loadStudentList();
+
+};
+
+
+window.rejectRegistration =
+async function(studentId){
+
+    await updateDoc(
+
+        doc(
+            db,
+            "halls",
+            HALL,
+            "registrationRequests",
+            studentId
+        ),
+
+        {
+            status:"Rejected"
+        }
+
+    );
+
+
+    await loadDashboard();
+
+    await loadRegistrationRequests();
+
+};
+
+
+async function loadStudentList(){
+
+    const box =
+        document.getElementById(
+            "studentList"
+        );
+
+
+    const students =
+        await getStudents();
+
+
+    let html =
+        "<div class='table'><table>";
+
+
+    html +=
+        "<tr>";
+
+    html +=
+        "<th>ID</th>";
+
+    html +=
+        "<th>Name</th>";
+
+    html +=
+        "<th>Phone</th>";
+
+    html +=
+        "<th>Status</th>";
+
+    html +=
+        "<th>RFID</th>";
+
+    html +=
+        "<th>Action</th>";
+
+    html +=
+        "</tr>";
+
+
+    students.forEach(
+        student => {
+
+            const data =
+                student.data;
+
+
+            const blocked =
+                data.isBlocked === true;
+
+
+            html +=
+                "<tr>";
+
+            html +=
+                "<td>"+
+                escapeHTML(
+                    data.studentId ||
+                    student.id
+                )+
+                "</td>";
+
+            html +=
+                "<td>"+
+                escapeHTML(
+                    data.name || ""
+                )+
+                "</td>";
+
+            html +=
+                "<td>"+
+                escapeHTML(
+                    data.phone || ""
+                )+
+                "</td>";
+
+            html +=
+                "<td>"+
+                (
+                    blocked
+                    ?"Blocked"
+                    :"Active"
+                )+
+                "</td>";
+
+            html +=
+                "<td>"+
+                escapeHTML(
+                    data.rfidUID ||
+                    "Not Registered"
+                )+
+                "</td>";
+
+            html +=
+                "<td>";
+
+            html +=
+                "<button class='small orange' onclick=\"toggleBlock('"+
+                student.id+
+                "',"+
+                blocked+
+                ")\">"+
+                (
+                    blocked
+                    ?"Unblock"
+                    :"Block"
+                )+
+                "</button>";
+
+            html +=
+                "</td>";
+
+            html +=
+                "</tr>";
+
+        }
+    );
+
+
+    html +=
+        "</table></div>";
+
+
+    box.innerHTML = html;
+
+}
+
+
+window.addStudent =
+async function(){
+
+    const id =
+        document.getElementById(
+            "newStudentId"
+        ).value.trim();
+
+
+    if(!id){
+
+        document.getElementById(
+            "studentMessage"
+        ).textContent =
+            "Student ID is required.";
+
+        return;
+
+    }
+
+
+    await setDoc(
+
+        doc(
+            db,
+            "halls",
+            HALL,
+            "students",
+            id
+        ),
+
+        {
+
+            studentId:id,
+
+            name:
+                document.getElementById(
+                    "newStudentName"
+                ).value.trim(),
+
+            microsoftAccount:
+                document.getElementById(
+                    "newMicrosoft"
+                ).value.trim(),
+
+            phone:
+                document.getElementById(
+                    "newPhone"
+                ).value.trim(),
+
+            password:
+                document.getElementById(
+                    "newPassword"
+                ).value,
+
+            isApproved:true,
+
+            isActive:true,
+
+            isBlocked:false,
+
+            rfidUID:"",
+
+            cardStatus:
+                "Not Registered",
+
+            creditBalance:0
+
+        },
+
+        {merge:true}
+
+    );
+
+
+    document.getElementById(
+        "studentMessage"
+    ).textContent =
+        "Student added successfully.";
+
+
+    await loadStudentList();
+
+    await loadDashboard();
+
+};
+
+
+window.toggleBlock =
+async function(
+    studentId,
+    currentlyBlocked
+){
+
+    await updateDoc(
+
+        doc(
+            db,
+            "halls",
+            HALL,
+            "students",
+            studentId
+        ),
+
+        {
+
+            isBlocked:
+                !currentlyBlocked,
+
+            isActive:
+                currentlyBlocked
+
+        }
+
+    );
+
+
+    await loadStudentList();
+
+    await loadDashboard();
+
+};
+
+
+window.closeDining =
+async function(){
+
+    const date =
+        document.getElementById(
+            "closedDate"
+        ).value;
+
+
+    if(!date){
+        return;
+    }
+
+
+    const reference =
+        doc(
+            db,
+            "halls",
+            HALL,
+            "config",
+            "closedDining"
+        );
+
+
+    const snapshot =
+        await getDoc(reference);
+
+
+    let dates = [];
+
+
+    if(snapshot.exists()){
+
+        dates =
+            snapshot.data().dates ||
+            [];
+
+    }
+
+
+    if(!dates.includes(date)){
+
+        dates.push(date);
+
+    }
+
+
+    await setDoc(
+        reference,
+        {
+            dates:dates
+        },
+        {
+            merge:true
+        }
+    );
+
+
+    await loadClosedDates();
+
+};
+
+
+async function loadClosedDates(){
+
+    const box =
+        document.getElementById(
+            "closedDates"
+        );
+
+
+    const snapshot =
+        await getDoc(
+
+            doc(
+                db,
+                "halls",
+                HALL,
+                "config",
+                "closedDining"
+            )
+
+        );
+
+
+    if(
+        !snapshot.exists()
+    ){
+
+        box.innerHTML =
+            "<div class='message'>No closed dining date.</div>";
+
+        return;
+
+    }
+
+
+    const dates =
+        snapshot.data().dates || [];
+
+
+    box.innerHTML =
+        dates
+        .sort()
+        .map(
+            date =>
+                "<div class='message'>"+
+                escapeHTML(date)+
+                "</div>"
+        )
+        .join("");
+
+}
+
+
+async function loadPayments(){
+
+    const box =
+        document.getElementById(
+            "paymentList"
+        );
+
+
+    const students =
+        await getStudents();
+
+
+    const month =
+        getMonth(getToday());
+
+
+    let html =
+        "<div class='table'><table>";
+
+
+    html +=
+        "<tr>";
+
+    html +=
+        "<th>Student ID</th>";
+
+    html +=
+        "<th>Name</th>";
+
+    html +=
+        "<th>Paid Meal</th>";
+
+    html +=
+        "<th>Credit</th>";
+
+    html +=
+        "</tr>";
+
+
+    for(
+        const student of students
+    ){
+
+        const meals =
+            await getMonthlyMeals(
+                student.id,
+                month
+            );
+
+
+        const paidMealCount =
+            Object.values(meals)
+            .filter(isMealON)
+            .length;
+
+
+        const credit =
+            Number(
+                student.data.creditBalance ||
+                0
+            );
+
+
+        html +=
+            "<tr>";
+
+        html +=
+            "<td>"+
+            escapeHTML(
+                student.data.studentId ||
+                student.id
+            )+
+            "</td>";
+
+        html +=
+            "<td>"+
+            escapeHTML(
+                student.data.name ||
+                ""
+            )+
+            "</td>";
+
+        html +=
+            "<td>"+
+            paidMealCount+
+            "</td>";
+
+        html +=
+            "<td>৳"+
+            credit+
+            "</td>";
+
+        html +=
+            "</tr>";
+
+    }
+
+
+    html +=
+        "</table></div>";
+
+
+    box.innerHTML = html;
+
+}
+
+
+window.addStudentCredit =
+async function(){
+
+    const id =
+        document.getElementById(
+            "creditStudentId"
+        ).value.trim();
+
+
+    const amount =
+        Number(
+            document.getElementById(
+                "creditValue"
+            ).value
+        );
+
+
+    if(!id || amount <= 0){
+
+        document.getElementById(
+            "creditMessage"
+        ).textContent =
+            "Enter valid Student ID and amount.";
+
+        return;
+
+    }
+
+
+    const reference =
+        doc(
+            db,
+            "halls",
+            HALL,
+            "students",
+            id
+        );
+
+
+    const snapshot =
+        await getDoc(reference);
+
+
+    if(!snapshot.exists()){
+
+        document.getElementById(
+            "creditMessage"
+        ).textContent =
+            "Student not found.";
+
+        return;
+
+    }
+
+
+    const oldCredit =
+        Number(
+            snapshot.data().creditBalance ||
+            0
+        );
+
+
+    await updateDoc(
+        reference,
+        {
+            creditBalance:
+                oldCredit + amount
+        }
+    );
+
+
+    document.getElementById(
+        "creditMessage"
+    ).textContent =
+        "Credit added successfully.";
+
+
+    await loadPayments();
+
+};
+
+
+window.generateRFID =
+function(){
+
+    document.getElementById(
+        "rfidUID"
+    ).value =
+        "RFID-"+
+        Math.random()
+        .toString(16)
+        .substring(2,10)
+        .toUpperCase();
+
+};
+
+
+window.registerRFID =
+async function(){
+
+    const id =
+        document.getElementById(
+            "rfidStudentId"
+        ).value.trim();
+
+
+    const uid =
+        document.getElementById(
+            "rfidUID"
+        ).value.trim();
+
+
+    if(!id || !uid){
+
+        document.getElementById(
+            "rfidMessage"
+        ).textContent =
+            "Enter Student ID and RFID UID.";
+
+        return;
+
+    }
+
+
+    await updateDoc(
+
+        doc(
+            db,
+            "halls",
+            HALL,
+            "students",
+            id
+        ),
+
+        {
+
+            rfidUID:uid,
+
+            cardStatus:"Active",
+
+            isActive:true
+
+        }
+
+    );
+
+
+    document.getElementById(
+        "rfidMessage"
+    ).textContent =
+        "RFID registered successfully.";
+
+
+    await loadStudentList();
+
+    await loadDashboard();
+
+};
+
+
+window.saveMealTimes =
+async function(){
+
+    await setDoc(
+
+        doc(
+            db,
+            "halls",
+            HALL,
+            "config",
+            "mealTimes"
+        ),
+
+        {
+
+            breakfast:
+                document.getElementById(
+                    "breakfastTime"
+                ).value,
+
+            lunch:
+                document.getElementById(
+                    "lunchTime"
+                ).value,
+
+            dinner:
+                document.getElementById(
+                    "dinnerTime"
+                ).value
+
+        },
+
+        {
+            merge:true
+        }
+
+    );
+
+
+    document.getElementById(
+        "mealTimeMessage"
+    ).textContent =
+        "Meal time saved successfully.";
+
+};
+
+
+async function loadMealTimes(){
+
+    const snapshot =
+        await getDoc(
+
+            doc(
+                db,
+                "halls",
+                HALL,
+                "config",
+                "mealTimes"
+            )
+
+        );
+
+
+    if(
+        snapshot.exists()
+    ){
+
+        const data =
+            snapshot.data();
+
+
+        document.getElementById(
+            "breakfastTime"
+        ).value =
+            data.breakfast || "";
+
+
+        document.getElementById(
+            "lunchTime"
+        ).value =
+            data.lunch || "";
+
+
+        document.getElementById(
+            "dinnerTime"
+        ).value =
+            data.dinner || "";
+
+    }
+
+}
+
+
+window.saveNotice =
+async function(){
+
+    const text =
+        document.getElementById(
+            "noticeText"
+        ).value;
+
+
+    await setDoc(
+
+        doc(
+            db,
+            "halls",
+            HALL,
+            "config",
+            "notice"
+        ),
+
+        {
+
+            text:text,
+
+            updatedAt:
+                new Date().toISOString()
+
+        },
+
+        {
+            merge:true
+        }
+
+    );
+
+
+    document.getElementById(
+        "noticeMessage"
+    ).textContent =
+        "Notice published successfully.";
+
+
+    await loadNotice();
+
+};
+
+
+async function loadNotice(){
+
+    const snapshot =
+        await getDoc(
+
+            doc(
+                db,
+                "halls",
+                HALL,
+                "config",
+                "notice"
+            )
+
+        );
+
+
+    if(
+        snapshot.exists()
+    ){
+
+        document.getElementById(
+            "currentNotice"
+        ).textContent =
+            snapshot.data().text ||
+            "No notice.";
+
+    }
+
+}
+
+
+window.generateReport =
+async function(){
+
+    const date =
+        document.getElementById(
+            "reportDate"
+        ).value;
+
+
+    if(!date){
+        return;
+    }
+
+
+    const result =
+        await getDaySummary(date);
+
+
+    currentReport = {
+
+        date:date,
+
+        ...result
+
+    };
+
+
+    let html = "";
+
+
+    html +=
+        "<div class='summary'>";
+
+
+    html +=
+        "<div class='summary-item'>"+
+        "Breakfast"+
+        "<strong>"+
+        result.breakfast+
+        "</strong></div>";
+
+
+    html +=
+        "<div class='summary-item'>"+
+        "Lunch"+
+        "<strong>"+
+        result.lunch+
+        "</strong></div>";
+
+
+    html +=
+        "<div class='summary-item'>"+
+        "Dinner"+
+        "<strong>"+
+        result.dinner+
+        "</strong></div>";
+
+
+    html +=
+        "<div class='summary-item'>"+
+        "Total Meal"+
+        "<strong>"+
+        result.total+
+        "</strong></div>";
+
+
+    html +=
+        "<div class='summary-item'>"+
+        "Total Amount"+
+        "<strong>৳"+
+        result.amount+
+        "</strong></div>";
+
+
+    html +=
+        "</div>";
+
+
+    document.getElementById(
+        "reportResult"
+    ).innerHTML = html;
+
+};
+
+
+window.downloadPDF =
+function(){
+
+    if(!currentReport){
+
+        alert(
+            "First generate a report."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        !window.jspdf
+    ){
+
+        alert(
+            "PDF library is not loaded."
+        );
+
+        return;
+
+    }
+
+
+    const {
+        jsPDF
+    } = window.jspdf;
+
+
+    const pdf =
+        new jsPDF();
+
+
+    pdf.setFontSize(17);
+
+    pdf.text(
+        "Smart Dining - Meal Report",
+        14,
+        18
+    );
+
+
+    pdf.setFontSize(11);
+
+    pdf.text(
+        "Shahid Tajuddin Ahmad Hall (STA Hall)",
+        14,
+        27
+    );
+
+
+    pdf.text(
+        "Date: "+
+        currentReport.date,
+        14,
+        35
+    );
+
+
+    pdf.text(
+        "Breakfast: "+
+        currentReport.breakfast+
+        " x Tk 25",
+        14,
+        45
+    );
+
+
+    pdf.text(
+        "Lunch: "+
+        currentReport.lunch+
+        " x Tk 35",
+        14,
+        53
+    );
+
+
+    pdf.text(
+        "Dinner: "+
+        currentReport.dinner+
+        " x Tk 35",
+        14,
+        61
+    );
+
+
+    pdf.text(
+        "Total Meal: "+
+        currentReport.total,
+        14,
+        69
+    );
+
+
+    pdf.text(
+        "Total Amount: Tk "+
+        currentReport.amount,
+        14,
+        77
+    );
+
+
+    const rows =
+        currentReport.rows.map(
+            row => [
+
+                row.id,
+
+                row.name,
+
+                row.breakfast
+                    ?"ON"
+                    :"OFF",
+
+                row.lunch
+                    ?"ON"
+                    :"OFF",
+
+                row.dinner
+                    ?"ON"
+                    :"OFF"
+
+            ]
+        );
+
+
+    pdf.autoTable({
+
+        startY:85,
+
+        head:[
+            [
+                "Student ID",
+                "Name",
+                "Breakfast",
+                "Lunch",
+                "Dinner"
+            ]
+        ],
+
+        body:rows
+
+    });
+
+
+    pdf.save(
+        "Meal_Report_"+
+        currentReport.date+
+        ".pdf"
+    );
+
+};
+
+
+window.resetStudentPassword =
+async function(){
+
+    const id =
+        document.getElementById(
+            "resetStudentId"
+        ).value.trim();
+
+
+    const password =
+        document.getElementById(
+            "resetStudentPassword"
+        ).value;
+
+
+    if(!id || !password){
+
+        document.getElementById(
+            "passwordMessage"
+        ).textContent =
+            "Enter Student ID and new password.";
+
+        return;
+
+    }
+
+
+    const reference =
+        doc(
+            db,
+            "halls",
+            HALL,
+            "students",
+            id
+        );
+
+
+    const snapshot =
+        await getDoc(reference);
+
+
+    if(!snapshot.exists()){
+
+        document.getElementById(
+            "passwordMessage"
+        ).textContent =
+            "Student not found.";
+
+        return;
+
+    }
+
+
+    await updateDoc(
+
+        reference,
+
+        {
+            password:password
+        }
+
+    );
+
+
+    document.getElementById(
+        "passwordMessage"
+    ).textContent =
+        "Password reset successfully.";
+
+};
+
+
+</script>
+
+</body>
+</html>
