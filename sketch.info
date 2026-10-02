@@ -1,0 +1,118 @@
+#include <SPI.h>
+#include <MFRC522.h>
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include <ESP32Servo.h>
+
+#define SS_PIN 5
+#define RST_PIN 27
+#define SERVO_PIN 13
+
+MFRC522 rfid(SS_PIN, RST_PIN);
+LiquidCrystal_I2C lcd(0x27, 20, 4);
+Servo gateServo;
+
+void setup() {
+  Serial.begin(115200);
+
+  // RFID
+  SPI.begin();
+  rfid.PCD_Init();
+
+  // LCD
+  lcd.init();
+  lcd.backlight();
+
+  // Servo
+  gateServo.attach(SERVO_PIN);
+  gateServo.write(0);
+
+  // LCD startup
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("SMART DINING");
+  lcd.setCursor(0, 1);
+  lcd.print("RFID SYSTEM");
+  lcd.setCursor(0, 2);
+  lcd.print("Scan Your Card");
+  lcd.setCursor(0, 3);
+  lcd.print("Gate: CLOSED");
+
+  Serial.println("Smart Dining System Ready");
+  Serial.println("Scan RFID card...");
+}
+
+void loop() {
+
+  // Check for new RFID card
+  if (!rfid.PICC_IsNewCardPresent()) {
+    return;
+  }
+
+  if (!rfid.PICC_ReadCardSerial()) {
+    return;
+  }
+
+  // Read UID
+  String uid = "";
+
+  for (byte i = 0; i < rfid.uid.size; i++) {
+
+    if (rfid.uid.uidByte[i] < 0x10) {
+      uid += "0";
+    }
+
+    uid += String(rfid.uid.uidByte[i], HEX);
+
+    if (i < rfid.uid.size - 1) {
+      uid += ":";
+    }
+  }
+
+  uid.toUpperCase();
+
+  // Serial Monitor
+  Serial.print("RFID UID: ");
+  Serial.println(uid);
+
+  // LCD
+  lcd.clear();
+
+  lcd.setCursor(0, 0);
+  lcd.print("CARD DETECTED");
+
+  lcd.setCursor(0, 1);
+  lcd.print("UID:");
+
+  lcd.setCursor(0, 2);
+  lcd.print(uid);
+
+  lcd.setCursor(0, 3);
+  lcd.print("Gate: OPEN");
+
+  // Open gate
+  gateServo.write(90);
+
+  delay(3000);
+
+  // Close gate
+  gateServo.write(0);
+
+  // Return to home screen
+  lcd.clear();
+
+  lcd.setCursor(0, 0);
+  lcd.print("SMART DINING");
+
+  lcd.setCursor(0, 1);
+  lcd.print("Scan Your Card");
+
+  lcd.setCursor(0, 3);
+  lcd.print("Gate: CLOSED");
+
+  // Stop RFID communication
+  rfid.PICC_HaltA();
+  rfid.PCD_StopCrypto1();
+
+  delay(1000);
+}

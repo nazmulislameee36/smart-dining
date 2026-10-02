@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "author": "Smart Dining",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "wokwi-esp32-devkit-v1",
+      "id": "esp",
+      "top": 0,
+      "left": 0,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-mfrc522",
+      "id": "rfid",
+      "top": -20,
+      "left": 300,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-lcd2004",
+      "id": "lcd",
+      "top": 180,
+      "left": 300,
+      "attrs": {
+        "pins": "i2c"
+      }
+    },
+    {
+      "type": "wokwi-servo",
+      "id": "servo",
+      "top": 350,
+      "left": 300,
+      "attrs": {}
+    }
+  ],
+  "connections": [
+    ["esp:5", "rfid:SDA", "green", []],
+    ["esp:18", "rfid:SCK", "green", []],
+    ["esp:23", "rfid:MOSI", "green", []],
+    ["esp:19", "rfid:MISO", "green", []],
+    ["esp:27", "rfid:RST", "green", []],
+    ["esp:3V3", "rfid:3.3V", "red", []],
+    ["esp:GND.1", "rfid:GND", "black", []],
+
+    ["esp:21", "lcd:SDA", "green", []],
+    ["esp:22", "lcd:SCL", "green", []],
+    ["esp:5V", "lcd:VCC", "red", []],
+    ["esp:GND.2", "lcd:GND", "black", []],
+
+    ["esp:13", "servo:PWM", "green", []],
+    ["esp:5V", "servo:V+", "red", []],
+    ["esp:GND.3", "servo:GND", "black", []]
+  ]
+}
